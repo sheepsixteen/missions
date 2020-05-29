@@ -39,11 +39,12 @@ for a in arr:
 		target = re.sub("\"label", "{\"label", target)
 		target = re.sub(r"(\"href\":\".*\")", r"\1}", target)
 		target = re.sub(", \{", "}, {", target)
-		target = re.sub(",\n", ",\n\"slug\":\"" + type[0] + "\",\n", target, 1)
 		target = re.sub(",\n", ",\n\"type\":\"mission\",\n", target, 1) 
-		
+		target = re.sub(",\n", ",\n\"type\":\"mission\",\n", target, 1) 
+		target = re.sub(",\n", ",\n\"from\":\"https://raw.githubusercontent.com/sheepsixteen/missions/master/" + urllib.parse.quote(type[0]) + "\",\n", target, 1) 		
+
 		d = json.loads(target)
-		print(d)	
+		print(d)
 		
 		id = secrets.token_urlsafe(20)
 
