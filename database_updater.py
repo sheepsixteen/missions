@@ -23,6 +23,7 @@ for a in arr:
 		match = re.search("---(.|\n)*?---", content)
 		target = match.group()
 		
+		target = re.sub('"', '\\"', target)
 		target = re.sub("---", "{", target, 1)
 		target = re.sub("---", "}", target, 1)
 		target = re.sub("\n  - ", ", ", target)
