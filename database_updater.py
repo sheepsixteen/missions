@@ -42,14 +42,18 @@ for a in arr:
 		target = re.sub(", \{", "}, {", target)
 		target = re.sub(",\n", ",\n\"type\":\"mission\",\n", target, 1) 
 		target = re.sub(",\n", ",\n\"type\":\"mission\",\n", target, 1) 
-		target = re.sub(",\n", ",\n\"from\":\"https://raw.githubusercontent.com/sheepsixteen/missions/master/" + urllib.parse.quote(type[0]) + "\",\n", target, 1) 		
+		target = re.sub(",\n", ",\n\"from\":\"https://raw.githubusercontent.com/sheepsixteen/missions/master/" + urllib.parse.quote(type[0]) + "\",\n", target, 1)		
+
+		match = re.search(r"\"difficulty\":\"([0-9]+)\"", target)
+		difficulty = match.group()
+		difficulty = int(difficulty.split('"')[3])
 
 		d = json.loads(target)
+		d["difficulty"] = difficulty
+		
 		print(d)
 		
 		id = secrets.token_urlsafe(20)
 
 		doc_ref = db.collection('example').document(id)
 		doc_ref.set(d)
-	
-print(arr)
