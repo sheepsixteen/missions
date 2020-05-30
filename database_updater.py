@@ -12,12 +12,22 @@ firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
+doc_ref = db.collection(u'example').stream()
+urls = []
+
+for doc in doc_ref:
+	details = doc.to_dict()
+	urls.append(details["from"])
+
 arr = os.listdir("missions/")
 type = []
 
+
 for a in arr:
 	type = a.split('.')
-	if(type[1] == "md"):
+	url = "https://raw.githubusercontent.com/sheepsixteen/missions/master/" + urllib.parse.quote(type[0])
+
+	if(type[1] == "md" and urls.count(url) == 0):
 		file = open("missions/" + a, "+r")
 		content = file.read()
 		match = re.search("---(.|\n)*?---", content)
@@ -42,7 +52,7 @@ for a in arr:
 		target = re.sub(", \{", "}, {", target)
 		target = re.sub(",\n", ",\n\"type\":\"mission\",\n", target, 1) 
 		target = re.sub(",\n", ",\n\"type\":\"mission\",\n", target, 1) 
-		target = re.sub(",\n", ",\n\"from\":\"https://raw.githubusercontent.com/sheepsixteen/missions/master/" + urllib.parse.quote(type[0]) + "\",\n", target, 1)		
+		target = re.sub(",\n", ",\n\"from\":\"" + url + "\",\n", target, 1)		
 
 		match = re.search(r"\"difficulty\":\"([0-9]+)\"", target)
 		difficulty = match.group()
@@ -57,3 +67,6 @@ for a in arr:
 
 		doc_ref = db.collection('example').document(id)
 		doc_ref.set(d)
+
+	elif(type[1] == "md"):
+		print("No new updates to be made")
